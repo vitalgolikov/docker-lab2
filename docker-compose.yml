@@ -1,0 +1,50 @@
+version: '3.8'
+services:
+  web:
+    build: ./web
+    container_name: app_host
+    depends_on:
+      - mysql
+    volumes:
+      - ./web/php-mysql-crud:/var/www/html/
+    ports:
+      - 8080:80
+    networks:
+      hillel:
+          ipv4_address: 172.22.14.100
+
+
+  mysql:
+    image: mysql:8.0
+    container_name: db_host
+    restart: always
+    command: ['--default_authentication_plugin=caching_sha2_password']
+    environment:
+      - MYSQL_ROOT_PASSWORD=mauFJcuf5dhRMQrjj
+      - MYSQL_DATABASE=crub_db
+      - MYSQL_USER=crub_user
+      - MYSQL_PASSWORD=mypsfeguser
+    ports:
+      - '3306:3306'
+    volumes:
+      - db:/var/lib/mysql
+      - ./mysql/init/:/docker-entrypoint-initdb.d
+      - ./mysql/config/custom.cnf:/etc/mysql/conf.d/custom.cnf
+    networks:
+      hillel:
+          ipv4_address: 172.22.14.101
+
+
+volumes:
+  db:
+    driver: local
+    name: datastore
+
+networks:
+  hillel:
+    name: hillel
+    driver: bridge
+    ipam:
+        config:
+        - subnet: 172.22.14.0/24
+          gateway: 172.22.14.254
