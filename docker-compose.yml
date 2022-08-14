@@ -5,8 +5,8 @@ services:
     container_name: app_host
     depends_on:
       - mysql
-    volumes:
-      - ./web/php-mysql-crud:/var/www/html/
+#    volumes:
+#      - ./web/php-mysql-crud:/var/www/html/
     ports:
       - 8080:80
     networks:
